@@ -6,17 +6,18 @@ import { useState, useEffect } from 'react';
 import { signIn, signOut, useSession, getProviders } from 'next-auth/react';
 
 const Nav = () => {
-  const isUserLoggedIn = false;
+  const isUserLoggedIn = true;
   const [providers, setProviders] = useState(null);
+  const [toggleDropDown, setToggleDropDown] = useState(false);
 
   useEffect(() => {
-    const setProviders = async () => {
+    const setProvider = async () => {
       const response = await getProviders();
 
       setProviders(response);
     };
 
-    setProviders();
+    setProvider();
   }, []);
 
   return (
@@ -32,7 +33,7 @@ const Nav = () => {
         <p className="logo_text">GPTPROMPT</p>
       </Link>
 
-      {/* mobile menu */}
+      {/* Desktop menu */}
       <div className="sm:flex hidden">
         {isUserLoggedIn ? (
           <div className="flex gap-3 md:gap-5">
@@ -64,6 +65,65 @@ const Nav = () => {
                   className="black_btn"
                 >
                   Sign In
+                </button>
+              ))}
+          </>
+        )}
+      </div>
+
+      {/* Desktop menu */}
+      <div className="sm:hidden flex relative">
+        {isUserLoggedIn ? (
+          <div className="flex">
+            <Image
+              src="assets/images/logo.svg"
+              width={37}
+              height={37}
+              className="rounded-full"
+              alt="profile picture"
+              onClick={() => {
+                setToggleDropDown((prev) => !prev);
+              }}
+            />
+
+            {toggleDropDown && (
+              <div className="dropdown">
+                <Link
+                  href="/profile"
+                  className="dropdown_link"
+                  onClick={() => setToggleDropDown(false)}
+                >
+                  My profile
+                </Link>
+                <Link
+                  href="/create-prompt"
+                  className="dropdown_link"
+                  onClick={() => setToggleDropDown(false)}
+                >
+                  Craete Prompt
+                </Link>
+                <button
+                  onClick={() => {
+                    setToggleDropDown(false), signOut();
+                  }}
+                  className="mt-5 w-full black_btn"
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            {providers &&
+              Object.values(providers).map((provider) => (
+                <button
+                  type="button"
+                  key={provider.name}
+                  onClick={signIn(provider.id)}
+                  className="black_btn"
+                >
+                  Sign in
                 </button>
               ))}
           </>
