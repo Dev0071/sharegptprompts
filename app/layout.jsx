@@ -4,7 +4,7 @@ import Provider from '@components/Provider';
 
 export const metadata = {
   title: 'gtpPrompts',
-  description: 'Discover ans share AI prompts',
+  description: 'Discover and share AI prompts',
 };
 
 const Rootlayout = ({ children }) => {
